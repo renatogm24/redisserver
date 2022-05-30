@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redisserver
+  labels:
+    app: redisserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: redisserver
+  template:
+    metadata:
+      labels:
+        app: redisserver
+        service: redisserver
+    spec:
+      containers:
+        - name: redisserver
+          image: redisserver.azurecr.io/redisserver:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:6379
+            - name: WebApiBaseAddress
+              value: http://webapi
